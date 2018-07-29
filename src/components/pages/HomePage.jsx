@@ -1,17 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
-  Page, Navbar, NavTitle, Block,
+  Page, Navbar, NavTitle, NavRight, Link, List, ListItem, Toggle
 } from 'framework7-react';
 
-export default () => (
-  <Page>
-    <Navbar>
-      <NavTitle>My App</NavTitle>
-    </Navbar>
+export default class HomePage extends Component {
+  state = {
+    tasks: [{
+      name: 'Hello'
+    }, {
+      name: 'Toptal'
+    }, {
+      name: 'Blog'
+    }]
+  };
 
-    <Block strong>
-      <p>Here is your blank Framework7 app. Let's see what we have here.</p>
-    </Block>
+  addTask = () => {
+    this.$f7.dialog.prompt('Task Name:', 'Add Task', (name) => {
+      this.setState({
+        tasks: [
+          ...this.state.tasks,
+          { name }
+        ]
+      });
+    });
+  };
 
-  </Page>
-);
+  render = () => (
+    <Page>
+      <Navbar>
+        <NavTitle>To Do List</NavTitle>
+        <NavRight>
+          <Link iconOnly iconF7="add_round_fill" onClick={this.addTask}/>
+        </NavRight>
+      </Navbar>
+
+      <List simple-list>
+        {this.state.tasks.map((task, i) => (
+          <ListItem title={task.name} key={i}>
+            <Toggle slot="after"/>
+          </ListItem>
+        ))}
+      </List>
+    </Page>
+  );
+}
